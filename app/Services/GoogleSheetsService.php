@@ -18,6 +18,7 @@ class GoogleSheetsService
     public $commentColumnIndex;
     protected $sheetName;
     protected $sheetId;
+    protected $headerRowsCount=1;
 
     public function __construct()
     {
@@ -45,7 +46,7 @@ class GoogleSheetsService
         foreach ($existingData as $index => $row) {
             if (!empty($row[0])) {
                 $idMap[$row[0]] = [
-                    'row' => $index + 1,
+                    'row' => $index + 1 + $this->headerRowsCount,
                     'comment' => $row[$this->commentColumnIndex] ?? null
                 ];
             }
@@ -178,6 +179,12 @@ class GoogleSheetsService
             $this->spreadsheetId,
             $this->sheetName
         );
-        return $response->getValues() ?? [];
+        if($response->getValues()){
+            $data = $response->getValues();
+            return array_slice($data, $this->headerRowsCount);
+        }
+        else {
+            return [];
+        }
     }
 }
