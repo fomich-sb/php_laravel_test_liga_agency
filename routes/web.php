@@ -26,3 +26,14 @@ Route::get('/fetch/{count?}', function ($count = null) {
     return response($kernel->output())
            ->header('Content-Type', 'text/plain');
 })->where('count', '\d+')->name('fetch');
+
+Route::get('/sync', function ($count = null) {
+    $kernel = Container::getInstance()->make(Kernel::class);
+    
+    $params = [];
+    
+    $status = $kernel->call('sheets:sync', $params);
+    
+    return redirect()->route('items.index')
+            ->with('success', 'Экспорт выполнен');
+})->name('sync');

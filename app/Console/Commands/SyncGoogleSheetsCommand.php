@@ -8,7 +8,7 @@ use App\Services\GoogleSheetsService;
 
 class SyncGoogleSheetsCommand extends Command
 {
-    protected $signature = 'sync:sheets {--count=}';
+    protected $signature = 'sheets:sync {--count=}';
     protected $description = 'Синхронизирует данные из БД с Google Sheets';
 
     public function handle()

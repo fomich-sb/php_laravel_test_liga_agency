@@ -23,6 +23,9 @@
                             <a class="nav-link" href="{{ route('items.create') }}">Добавить элемент</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('sync') }}">Выгрузить в таблицу</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('fetch') }}">Получить комментарии</a>
                         </li>
                     </ul>
