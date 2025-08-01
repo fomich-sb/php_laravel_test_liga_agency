@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class ItemController extends Controller
 {
@@ -100,15 +101,31 @@ class ItemController extends Controller
             'sheet_url' => 'required|url'
         ]);
         
-        // Извлекаем ID таблицы из URL
         $url = $validated['sheet_url'];
         preg_match('/\/d\/([a-zA-Z0-9-_]+)/', $url, $matches);
         $sheetId = $matches[1] ?? null;
         
-        if ($sheetId) {
-            config(['services.google.sheet_id' => $sheetId]);
+        if ($sheetId) {           
+
+            // Обновляем .env файл
+            $envPath = base_path('.env');
+            $envContent = file_get_contents($envPath);
             
-            // Здесь можно сохранить ID в базу или файл конфигурации
+            if (str_contains($envContent, 'GOOGLE_SHEET_ID=')) {
+                $envContent = preg_replace(
+                    '/GOOGLE_SHEET_ID=.*/',
+                    'GOOGLE_SHEET_ID='.$sheetId,
+                    $envContent
+                );
+            } else {
+                $envContent .= "\nGOOGLE_SHEET_ID=".$sheetId;
+            }
+            
+            file_put_contents($envPath, $envContent);
+            
+            config(['services.google.sheet_id' => $sheetId]);
+            Artisan::call('config:clear');
+
             return redirect()->route('items.index')
                 ->with('success', 'Google Таблица настроена');
         }
