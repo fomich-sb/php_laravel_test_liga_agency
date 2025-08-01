@@ -16,9 +16,6 @@ class GetCommentsFromGoogleSheetsCommand extends Command
     protected $description = 'Получает комментарии из Google Sheets и выводит их в консоль';
 
     protected $sheetsService;
-    protected $spreadsheetId;
-    protected $sheetName = 'Items';
-    protected $commentColumn = 'G'; // Колонка с комментариями
 
     public function handle()
     {
